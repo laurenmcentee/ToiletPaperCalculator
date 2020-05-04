@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     final String zeroError = "Inputs cannot be zero";
 
     //VARIABLES
-    int sheetsPerPoop = 17;
+    int sheetsPerPoop = 25;
     int poopsPerDay = 1;  //less than 40% of people poop everyday consider changing number
 
     int houseMembers = 0;
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button buttonClear;
     Button buttonCalculate;
-    Button buttonParameters;
+    Button buttonMoreParameters;
 
 
     @Override
@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
        editTextSheets = findViewById(R.id.editTextSheets);
        buttonClear = findViewById(R.id.buttonClear);
        buttonCalculate = findViewById(R.id.buttonCalculate);
+       buttonMoreParameters = findViewById(R.id.buttonMoreParameters);
 
         buttonClear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,11 +55,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        buttonMoreParameters.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ParametersActivity.class);
+                startActivityForResult(intent, 1);
+            }
+        });
 
         buttonCalculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                //Validation
+                //Checks for nulls and zeros
                 if(editTextHouseMembers == null || editTextSheets == null || editTextRolls == null)
                 {
                     Toast toast = Toast.makeText(getApplicationContext(),
@@ -74,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 if(rollQuant == 0 || sheetQuant == 0 || houseMembers == 0)
                 {
                     Toast toast = Toast.makeText(getApplicationContext(),
-                            zeroError, Toast.LENGTH_LONG);
+                        zeroError, Toast.LENGTH_LONG);
                     toast.show();
 
                     editTextRolls.setText("");
@@ -82,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
                     editTextHouseMembers.setText("");
                 }
 
+
+                //Gets Results
                 int daysOfTP = getResult(rollQuant, sheetQuant, houseMembers);
 
                 Bundle extras = new Bundle();
@@ -95,7 +107,27 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+    } //end of OnCreate
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                sheetsPerPoop = data.getIntExtra("sheetPerPoopPref", 0);
+                poopsPerDay = data.getIntExtra("frequencyPref", 0);
+
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Preferences have been changed to: " + sheetsPerPoop + "and" + poopsPerDay , Toast.LENGTH_LONG);
+                toast.show();
+
+            }
+        }
     }
+
+
+
 
     public void clearAll() {
         editTextRolls.setText("");
@@ -115,4 +147,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-}
+} //End of Class
