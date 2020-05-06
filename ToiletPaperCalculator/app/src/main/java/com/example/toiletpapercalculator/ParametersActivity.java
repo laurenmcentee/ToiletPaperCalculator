@@ -50,7 +50,7 @@ public class ParametersActivity extends AppCompatActivity {
                     toast.show();
                 }
 
-                //consider turning into doubles
+
                 frequencyPref = Integer.parseInt(editTextFrequency.getText().toString());
                 sheetPerPoopPref = Integer.parseInt(editTextSheetPreference.getText().toString());
 
@@ -61,9 +61,9 @@ public class ParametersActivity extends AppCompatActivity {
                     toast.show();
                 }
 
-                //get rid of toast for final copy
+
                 Toast toast = Toast.makeText(getApplicationContext(),
-                        "Values are now: " + frequencyPref + sheetPerPoopPref, Toast.LENGTH_LONG);
+                        "Values are now: " + frequencyPref +  " and " +sheetPerPoopPref, Toast.LENGTH_LONG);
                 toast.show();
 
 

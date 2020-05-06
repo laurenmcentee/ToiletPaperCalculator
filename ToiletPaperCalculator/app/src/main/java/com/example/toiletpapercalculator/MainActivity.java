@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,45 +68,39 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //Validation
-                //Checks for nulls and zeros
-                if(editTextHouseMembers == null || editTextSheets == null || editTextRolls == null)
-                {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            nullError, Toast.LENGTH_LONG);
-                    toast.show();
+                    boolean keepGoing = false;
 
+                    rollQuant = Integer.parseInt(editTextRolls.getText().toString());
+                    sheetQuant = Integer.parseInt(editTextSheets.getText().toString());
+                    houseMembers = Integer.parseInt(editTextHouseMembers.getText().toString());
+
+                    if (rollQuant == 0 || sheetQuant == 0 || houseMembers == 0) {
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                zeroError, Toast.LENGTH_LONG);
+                        toast.show();
+
+                        editTextSheets.setText("");
+                        editTextHouseMembers.setText("");
+                        editTextRolls.setText("");
+                        editTextRolls.requestFocus();
+                    }
+                    else{
+                        keepGoing = true;
+                    }
+
+                    if(keepGoing = true) {
+                        //Gets Results
+                        int daysOfTP = getResult(rollQuant, sheetQuant, houseMembers);
+
+                        Bundle extras = new Bundle();
+                        extras.putInt("daysOfTP", daysOfTP);
+                        extras.putInt("rollQuant", rollQuant);
+                        extras.putInt("houseMembers", houseMembers);
+                        Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
+                        intent.putExtras(extras);
+                        startActivity(intent);
+                    }
                 }
-
-                rollQuant = Integer.parseInt(editTextRolls.getText().toString());
-                sheetQuant = Integer.parseInt(editTextSheets.getText().toString());
-                houseMembers = Integer.parseInt(editTextHouseMembers.getText().toString());
-
-                if(rollQuant == 0 || sheetQuant == 0 || houseMembers == 0)
-                {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                        zeroError, Toast.LENGTH_LONG);
-                    toast.show();
-
-                    editTextRolls.setText("");
-                    editTextSheets.setText("");
-                    editTextHouseMembers.setText("");
-                }
-
-
-                //Gets Results
-                int daysOfTP = getResult(rollQuant, sheetQuant, houseMembers);
-
-                Bundle extras = new Bundle();
-                extras.putInt("daysOfTP", daysOfTP);
-                extras.putInt("rollQuant", rollQuant);
-                extras.putInt("houseMembers", houseMembers);
-                Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
-                intent.putExtras(extras);
-                startActivity(intent);
-
-            }
-
         });
     } //end of OnCreate
 
@@ -127,12 +122,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     public void clearAll() {
         editTextRolls.setText("");
         editTextSheets.setText("");
         editTextHouseMembers.setText("");
+        editTextRolls.requestFocus();
         houseMembers = 0;
         rollQuant = 0;
         sheetQuant = 0;
